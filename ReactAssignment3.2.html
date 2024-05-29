@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dynamic Form</title>
+</head>
+<body>
+  <div id="root"></div>
+  <script src="https://www.unpkg.com/react@18.2.0/umd/react.development.js"></script>
+  <script src="https://www.unpkg.com/react-dom@18.2.0/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script type="text/babel">
+    function DynamicForm() {
+      const [hobbies, setHobbies] = React.useState(['']);
+
+      const handleInputChange = (index, event) => {
+        const newHobbies = [...hobbies];
+        newHobbies[index] = event.target.value;
+        setHobbies(newHobbies);
+      };
+
+      const handleAddHobby = () => {
+        setHobbies([...hobbies, '']);
+      };
+
+      const handleRemoveHobby = (index) => {
+        const newHobbies = hobbies.filter((_, i) => i !== index);
+        setHobbies(newHobbies);
+      };
+
+      const handleSubmit = (event) => {
+        event.preventDefault();
+        console.log('Hobbies:', hobbies);
+      };
+
+      return (
+        <form onSubmit={handleSubmit} style={{ textAlign: 'center', marginTop: '50px' }}>
+          <h2>Enter Your Hobbies</h2>
+          {hobbies.map((hobby, index) => (
+            <div key={index} style={{ marginBottom: '10px' }}>
+              <input
+                type="text"
+                value={hobby}
+                onChange={(event) => handleInputChange(index, event)}
+                placeholder={`Hobby ${index + 1}`}
+                style={{ padding: '10px', fontSize: '16px', width: '200px' }}
+              />
+              {hobbies.length > 1 && (
+                <button
+                  type="button"
+                  onClick={() => handleRemoveHobby(index)}
+                  style={{ marginLeft: '10px' }}
+                >
+                  Remove
+                </button>
+              )}
+            </div>
+          ))}
+          <button type="button" onClick={handleAddHobby} style={{ marginTop: '10px' }}>
+            Add Hobby
+          </button>
+          <br />
+          <button type="submit" style={{ marginTop: '20px' }}>Submit</button>
+        </form>
+      );
+    }
+
+    ReactDOM.render(
+      <DynamicForm />,
+      document.getElementById('root')
+    );
+  </script>
+</body>
+</html>
